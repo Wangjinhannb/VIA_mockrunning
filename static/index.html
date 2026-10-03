@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f7f2">
+  <title>VIA</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">V</div>
+      <div>
+        <strong>VIA</strong>
+        <span>Route playback lab</span>
+      </div>
+    </div>
+    <div class="status-pill" id="bridgeStatus">本地桥接服务</div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar">
+      <section class="hero-copy">
+        <p class="eyebrow">ROUTE EDITOR</p>
+        <h1>画一条路线，<br>让测试设备沿它移动。</h1>
+        <p>先编辑路线，再预览运动；连接已授权 Android 后，可把回放位置发送到系统测试定位源。</p>
+      </section>
+
+      <nav class="mode-tabs" aria-label="工作模式">
+        <button class="mode-tab active" data-view="edit">路线编辑</button>
+        <button class="mode-tab" data-view="playback">手机回放</button>
+      </nav>
+
+      <section class="panel view-panel" data-panel="edit">
+        <div class="field">
+          <label for="searchInput">搜索地点</label>
+          <div class="search-row">
+            <input id="searchInput" placeholder="例如：广州塔">
+            <button id="searchBtn" class="secondary-btn">搜索</button>
+          </div>
+          <div id="searchResults" class="search-results"></div>
+        </div>
+
+        <div class="two-col">
+          <div class="field">
+            <label>路线样式</label>
+            <div class="segmented">
+              <button data-style="polyline" class="active">折线</button>
+              <button data-style="smooth">平滑</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>路线闭环</label>
+            <label class="switch-row">
+              <input id="closedLoop" type="checkbox">
+              <span>终点连回起点</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="section-heading">
+            <label>路线节点</label>
+            <span id="nodeCount">0 个</span>
+          </div>
+          <p class="helper">点击地图添加节点；拖动节点可微调位置。</p>
+          <div id="nodeList" class="node-list"></div>
+        </div>
+
+        <div class="button-row">
+          <button id="clearRouteBtn" class="text-btn">清空路线</button>
+          <button id="importBtn" class="secondary-btn">导入 JSON</button>
+          <button id="exportBtn" class="secondary-btn">导出 JSON</button>
+          <input id="importFile" type="file" accept=".json,application/json" hidden>
+        </div>
+      </section>
+
+      <section class="panel view-panel hidden" data-panel="playback">
+        <div class="metrics">
+          <div><span>距离</span><strong id="distanceValue">0.00 km</strong></div>
+          <div><span>预计时间</span><strong id="etaValue">--</strong></div>
+          <div><span>进度</span><strong id="progressValue">0%</strong></div>
+        </div>
+
+        <div class="field">
+          <label for="speedInput">速度 <span id="speedLabel">5.0 km/h</span></label>
+          <input id="speedInput" type="range" min="1" max="30" step="0.5" value="5">
+        </div>
+
+        <div class="player">
+          <button id="playBtn" class="primary-btn">开始</button>
+          <button id="resetBtn" class="secondary-btn">回到起点</button>
+          <div class="progress-track"><div id="progressFill"></div></div>
+        </div>
+
+        <div class="device-card">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">ANDROID BRIDGE</p>
+              <h2>测试设备</h2>
+            </div>
+            <button id="refreshDevicesBtn" class="text-btn">刷新</button>
+          </div>
+
+          <div id="adbMissing" class="notice hidden">
+            未检测到 adb。安装 Android SDK Platform-Tools 后重试。
+          </div>
+
+          <select id="deviceSelect">
+            <option value="">选择已授权 Android 设备</option>
+          </select>
+
+          <div class="button-row">
+            <button id="connectBtn" class="primary-btn small">连接设备</button>
+            <button id="disconnectBtn" class="secondary-btn small" disabled>断开</button>
+            <button id="clearMockBtn" class="text-btn" disabled>清除模拟定位</button>
+          </div>
+
+          <dl class="device-status">
+            <div><dt>状态</dt><dd id="deviceState">未连接</dd></div>
+            <div><dt>设备</dt><dd id="deviceSerial">--</dd></div>
+            <div><dt>最近发送</dt><dd id="deviceLocation">--</dd></div>
+          </dl>
+        </div>
+      </section>
+    </aside>
+
+    <section class="map-pane">
+      <div id="map"></div>
+      <div class="map-hint">点击地图添加节点</div>
+      <div class="map-summary">
+        <span id="summaryNodes">0 nodes</span>
+        <strong id="summaryDistance">0.00 km</strong>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

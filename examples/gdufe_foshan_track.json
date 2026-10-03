@@ -1,0 +1,13 @@
+{
+  "format": "route-studio-v1",
+  "name": "Campus demo",
+  "routeStyle": "smooth",
+  "closedLoop": true,
+  "speedKmh": 5,
+  "nodes": [
+    {"lat": 23.212836, "lng": 112.845606},
+    {"lat": 23.212575, "lng": 112.845357},
+    {"lat": 23.212310, "lng": 112.845912},
+    {"lat": 23.212625, "lng": 112.846213}
+  ]
+}
